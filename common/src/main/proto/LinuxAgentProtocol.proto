@@ -1,0 +1,101 @@
+option java_package = "com.sysmon.common.communication";
+option java_outer_classname = "LinuxAgentProtocol";
+
+message LinuxAgentRequest
+{
+    message CpuInfoRequest
+    {
+        optional bool user = 1;
+        optional bool nice = 2;
+        optional bool sys = 3;
+        optional bool iowait = 4;
+        optional bool irq = 5;
+        optional bool soft = 6;
+        optional bool steal = 7;
+        optional bool guest = 8;
+        optional bool gnice = 9;
+        optional bool idle = 10;
+    }
+
+    message MemoryInfoRequest
+    {
+        optional bool totalMemory = 1;
+        optional bool freeMemory = 2;
+        optional bool totalSwap = 3;
+        optional bool freeSwap = 4;
+    }
+
+    message CommandExecutionRequest
+    {
+        required string command = 1;
+    }
+
+    message Request
+    {
+        oneof request
+        {
+            CpuInfoRequest cpuInfoRequest = 1;
+            MemoryInfoRequest memoryInfoRequest = 2;
+            CommandExecutionRequest commandExecutionRequest = 3;
+        }
+    }
+
+    required int64 id = 1;
+    repeated Request requests = 2;
+}
+
+message LinuxAgentResponse
+{
+    message CpuInfoResponse
+    {
+        required int64 timestamp = 1;
+
+        optional float user = 2;
+        optional float nice = 3;
+        optional float sys = 4;
+        optional float iowait = 5;
+        optional float irq = 6;
+        optional float soft = 7;
+        optional float steal = 8;
+        optional float guest = 9;
+        optional float gnice = 10;
+        optional float idle = 11;
+    }
+
+    message MemoryInfoResponse
+    {
+        required int64 timestamp = 1;
+
+        optional int64 totalMemory = 2;
+        optional int64 freeMemory = 3;
+        optional int64 totalSwap = 4;
+        optional int64 freeSwap = 5;
+    }
+
+    message CommandExecutionResponse
+    {
+        required int64 timestamp = 1;
+
+        required string output = 2;
+        required int64 exitValue = 3;
+    }
+
+    message Response
+    {
+        oneof response
+        {
+            CpuInfoResponse cpuInfoResponse = 1;
+            MemoryInfoResponse memoryInfoResponse = 2;
+            CommandExecutionResponse commandExecutionResponse = 3;
+        }
+    }
+
+    message Error
+    {
+        required string message = 1;
+    }
+
+    required int64 id = 1;
+    repeated Response responses = 2;
+    optional Error error = 3;
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<metric-collector-configuration>
+    <collectors>
+        <collector>
+            <id>0</id>
+            <cronString>0/1 * * * * ?</cronString>
+            <linuxAgent>
+                <userEnabled>true</userEnabled>
+                <userMetricId>1</userMetricId>
+
+                <niceEnabled>true</niceEnabled>
+                <niceMetricId>2</niceMetricId>
+
+                <sysEnabled>true</sysEnabled>
+                <sysMetricId>3</sysMetricId>
+
+                <iowaitEnabled>true</iowaitEnabled>
+                <iowaitMetricId>4</iowaitMetricId>
+
+                <irqEnabled>true</irqEnabled>
+                <irqMetricId>5</irqMetricId>
+
+                <softEnabled>true</softEnabled>
+                <softMetricId>6</softMetricId>
+
+                <stealEnabled>true</stealEnabled>
+                <stealMetricId>7</stealMetricId>
+
+                <idleEnabled>true</idleEnabled>
+                <idleMetricId>8</idleMetricId>
+            </linuxAgent>
+        </collector>
+        <collector>
+            <id>1</id>
+            <cronString>0/1 * * * * ?</cronString>
+            <linuxAgent>
+                <totalMemoryEnabled>true</totalMemoryEnabled>
+                <totalMemoryMetricId>9</totalMemoryMetricId>
+
+                <freeMemoryEnabled>true</freeMemoryEnabled>
+                <freeMemoryMetricId>10</freeMemoryMetricId>
+
+                <totalSwapEnabled>true</totalSwapEnabled>
+                <totalSwapMetricId>11</totalSwapMetricId>
+
+                <freeSwapEnabled>true</freeSwapEnabled>
+                <freeSwapMetricId>12</freeSwapMetricId>
+            </linuxAgent>
+        </collector>
+    </collectors>
+</metric-collector-configuration>

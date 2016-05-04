@@ -1,0 +1,21 @@
+option java_package = "com.sysmon.common.communication";
+option java_outer_classname = "ProtobufSystemMonitoringProtocol";
+
+message MeasureBundle
+{
+    message Measure
+    {
+        required int64 metricId = 1;
+        required int64 time = 2;
+        oneof value
+        {
+            double doubleValue = 4;
+            float floatValue = 5;
+            int64 longValue = 6;
+            int32 intValue = 7;
+            bool booleanValue = 8;
+        }
+    }
+
+    repeated Measure measures = 1;
+}

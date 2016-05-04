@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             version="2.0">
+    <persistence-unit name="sysmonpersistence" transaction-type="RESOURCE_LOCAL">
+        <class>com.sysmon.core.dal.entity.instance.InstanceEntity</class>
+        <class>com.sysmon.core.dal.entity.DataTypeEntity</class>
+        <class>com.sysmon.core.dal.entity.metric.MetricEntity</class>
+        <class>com.sysmon.core.dal.entity.metric.MetricTypeEntity</class>
+        <class>com.sysmon.core.dal.entity.measure.MeasureEntity</class>
+        <class>com.sysmon.core.dal.entity.measure.BooleanMeasureEntity</class>
+        <class>com.sysmon.core.dal.entity.measure.DoubleMeasureEntity</class>
+        <class>com.sysmon.core.dal.entity.measure.FloatMeasureEntity</class>
+        <class>com.sysmon.core.dal.entity.measure.LongMeasureEntity</class>
+        <class>com.sysmon.core.dal.entity.measure.IntegerMeasureEntity</class>
+    </persistence-unit>
+</persistence>
