@@ -8,14 +8,14 @@ import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
+import ru.sudakovoleg.modelFactories.BarChartFactory;
+import ru.sudakovoleg.modelFactories.LineChartFactory;
+import ru.sudakovoleg.modelFactories.PieChartFactory;
 
-import javax.el.MethodExpression;
 import javax.faces.application.Application;
 import javax.faces.component.html.HtmlOutputText;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.MethodExpressionActionListener;
-import javax.faces.webapp.FacetTag;
+import java.sql.Timestamp;
 
 /**
  * Created by Oleg on 22.03.2016.
@@ -29,6 +29,8 @@ public class ChartPanel extends Panel {
     private HtmlOutputText text;
     int id;
 
+
+
     public Panel getPanel(){
         return panel;
     }
@@ -40,35 +42,80 @@ public class ChartPanel extends Panel {
 
     public ChartPanel(int index){
         initComponents(index);
-        panel.getChildren().add(text);
-        panel.getChildren().add(chart);
+        panel.getChildren().add(this.text);
+        panel.getChildren().add(this.chart);
         panel.getFacets().put("options", menu);
+    }
+
+    public ChartPanel(int index, String header, String text, Long[] dataids, String[] labels){
+        initComponents(index, header, text, dataids, labels);
+        panel.getChildren().add(this.text);
+        panel.getChildren().add(this.chart);
+        panel.getFacets().put("options", menu);
+    }
+
+    public ChartPanel(int index, String header, String text, Long[] dataids, String[] labels,
+                      int num, String xLabel, String yLabel, String chartType){
+        initComponents(index, header, text, dataids, labels, num, xLabel, yLabel, chartType);
+        panel.getChildren().add(this.text);
+        panel.getChildren().add(this.chart);
+        panel.getFacets().put("options", menu);
+    }
+
+    public ChartPanel(int index, String header, String text, Long[] dataids, String[] labels,
+                      Timestamp start, Timestamp end, String xLabel, String yLabel){
+        initComponents(index, header, text, dataids, labels, start, end, xLabel, yLabel);
+        panel.getChildren().add(this.text);
+        panel.getChildren().add(this.chart);
+        panel.getFacets().put("options", menu);
+    }
+
+    private void initComponents(int index, String header, String text, Long[] dataids, String[] labels){
+        id = index;
+        facesInit();
+        initPanel(index, header);
+        initText(index, text);
+        initMenu(index);
+        initChart(index, dataids, labels);
     }
 
     private void initComponents(int index){
         id = index;
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Application application = fc.getApplication();
-        panel = (Panel) application.createComponent(fc, "org.primefaces.component.Panel",
-                "org.primefaces.component.PanelRenderer");
-        chart = (Chart) application.createComponent(fc, "org.primefaces.component.Chart",
-                "org.primefaces.component.ChartRenderer");
-        menu = (Menu) application.createComponent(fc, "org.primefaces.component.Menu",
-                "org.primefaces.component.MenuRenderer");
-        initPanel(index);
-        initText(index);
+        facesInit();
+        initPanel(index, "Test Panel "+index);
+        initText(index, "Dashboard widget " + index);
         initMenu(index);
         initChart(index);
     }
 
-    private void initText(int index){
-        text = new HtmlOutputText();
-        text.setValue("Dashboard widget " + index);
+    private void initComponents(int index, String header, String text, Long[] dataids,
+                                String[] labels, int num, String xLabel, String yLabel, String chartType){
+        facesInit();
+        initPanel(index, header);
+        initText(index, text);
+        initMenu(index);
+        initChart(index, dataids, labels, num, xLabel, yLabel, chartType);
     }
 
-    private void initPanel(int index){
+    private void initComponents(int index, String header, String text, Long[] dataids,
+                                String[] labels, Timestamp start, Timestamp end, String xLabel,
+                                String yLabel){
+        id = index;
+        facesInit();
+        initPanel(index, header);
+        initText(index, text);
+        initMenu(index);
+        initChart(index, dataids, labels, start, end, xLabel, yLabel);
+    }
+
+    private void initText(int index, String input){
+        text = new HtmlOutputText();
+        text.setValue(input);
+    }
+
+    private void initPanel(int index, String header){
         panel.setId("panel_" + index);
-        panel.setHeader("Test Panel " + index);
+        panel.setHeader(header);
         panel.setClosable(true);
         panel.setToggleable(true);
     }
@@ -77,6 +124,43 @@ public class ChartPanel extends Panel {
         chart.setId("chart_" + index);
         chart.setType("line");
         LineChartModel model = initLinearModel();
+        chart.setModel(model);
+    }
+
+    private void initChart(int index, Long[] dataids, String[] labels, int num, String xLabel,
+                           String yLabel, String chartType){
+        chart.setId("chart_" + index);
+        if (chartType == "line"){
+            chart.setType("line");
+            LineChartFactory factory = new LineChartFactory();
+            LineChartModel model = factory.SQLModel(dataids, labels, num, xLabel, yLabel);
+            chart.setModel(model);
+        }
+        else if (chartType == "bar"){
+            chart.setType("bar");
+            BarChartFactory factory = new BarChartFactory();
+            BarChartModel model = factory.SQLModel(dataids, labels, num, xLabel, yLabel);
+            chart.setModel(model);
+        }
+        else {
+            System.out.println("Error in initChart with num");
+        }
+    }
+
+    private void initChart(int index, Long[] dataids, String[] labels, Timestamp start,
+            Timestamp end, String xLabel, String yLabel){
+        chart.setId("chart_" + index);
+        chart.setType("line");
+        LineChartFactory factory = new LineChartFactory();
+        LineChartModel model = factory.SQLModel(dataids, labels, start, end, xLabel, yLabel);
+        chart.setModel(model);
+    }
+
+    private void initChart(int index, Long[] dataids, String[] labels){
+        chart.setId("chart_" + index);
+        chart.setType("pie");
+        PieChartFactory factory = new PieChartFactory();
+        PieChartModel model = factory.SQLModel(dataids, labels);
         chart.setModel(model);
     }
 
@@ -124,4 +208,21 @@ public class ChartPanel extends Panel {
 
         return model;
     }
+
+    public void updateSqlModel(Long[] dataids, String[] labels, int num, String xLabel, String yLabel){
+        LineChartFactory factory = new LineChartFactory();
+        chart.setModel(factory.SQLModel(dataids, labels, num, yLabel, xLabel));
+    }
+
+    private void facesInit(){
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Application application = fc.getApplication();
+        panel = (Panel) application.createComponent(fc, "org.primefaces.component.Panel",
+                "org.primefaces.component.PanelRenderer");
+        chart = (Chart) application.createComponent(fc, "org.primefaces.component.Chart",
+                "org.primefaces.component.ChartRenderer");
+        menu = (Menu) application.createComponent(fc, "org.primefaces.component.Menu",
+                "org.primefaces.component.MenuRenderer");
+    }
+
 }
